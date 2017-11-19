@@ -2,9 +2,10 @@
 #RFC search tool
 
 import os
-import requests as rq
-from bs4 import BeautifulSoup as bs
+import requests
+from bs4 import BeautifulSoup
 
+# user interface
 def mainPage():
     print(" ____  _____ ____                           _     ")
     print("|  _ \|  ___/ ___|  ___  ___  __ _ _ __ ___| |__  ")
@@ -16,31 +17,35 @@ def mainPage():
     print("* GitHub   https://github.com/Aquilao/Toy-Box")
     print("--------------------------------------------------")
     id = input('Please input RFC id:')
+    print("Please waiting a moment...")
     return id
 
+# get the html text
 def getHTMLText(rfcid):
     url = 'https://tools.ietf.org/html/rfc'
     try:
-        r = rq.get(url + rfcid)
+        r = requests.get(url + rfcid)
         r.raise_for_status()
         return r.text
     except:
         return 'HTTP Error!'
 
+# Analysis the html text
 def mksoup(html):
-    soup = bs(html, "html.parser")
+    soup = BeautifulSoup(html, 'html.parser')
     print(soup.title.string)
-    [s.extract() for s in soup('head')]
+    [s.extract() for s in soup('head')]    #Remove head tag and the text between them
     return soup
 
+# Save RFC document
 def saveRFC(soup, rfcid):
     path = os.path.expandvars('$HOME') + '/Downloads/'
-    file_path = path + 'rfc' + rfcid + '.txt' 
-    text = soup.get_text()
+    file_path = path + 'rfc' + rfcid + '.txt'
+    text = soup.get_text()    # Remove all of the tags
     f = open(file_path, 'w+')
     f.write(text)
     f.close()
-    print('Success!save in ' + path)
+    print('Success! download in ' + path)
 
 def main():
     rfcid = mainPage()
@@ -48,5 +53,5 @@ def main():
     soup = mksoup(html)
     saveRFC(soup, rfcid)
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     main()
