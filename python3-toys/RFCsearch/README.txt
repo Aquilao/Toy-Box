@@ -4,8 +4,8 @@
 |  _ <|  _|| |___  \__ \  __/ (_| | | | (__| | | |
 |_| \_\_|   \____| |___/\___|\__,_|_|  \___|_| |_|
 --------------------------------------------------
-* Version 1.0
+* Version  1.0
 * GitHub   https://github.com/Aquilao/Toy-Box
 --------------------------------------------------
 
-RFC search is a little spider to search and download RFC documents
+RFC documents downloads tool

@@ -5,8 +5,8 @@
 /___|_| .__/|_|     \_/\_/ |_| |_|
       |_|                         
 ---------------------------------------------
-* Version 1.0
+* Version  1.0
 * GitHub   https://github.com/Aquilao/Toy-Box
 ---------------------------------------------
 
-zip crack tool
+zip password crack tool

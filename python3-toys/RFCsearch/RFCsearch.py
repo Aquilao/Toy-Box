@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-#RFC search tool
+# RFC search tool
 
 import os
 import requests
