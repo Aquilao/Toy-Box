@@ -4,8 +4,9 @@
 import requests
 import re
 import socket
-# TODO(Aquilao@outlook.com): Set options.
-# from optparse import OptionParser
+
+# TODO(Aquilao@outlook.com): Set usage options.
+# TODO(Aquilao@outlook.com): Fix out the script find wrong sub-domains in baidu.
 
 # user interface
 def mainPage():
@@ -49,16 +50,15 @@ def main():
 		subdomains = GetonePage(domain, page)
 		site += list(subdomains)
 		site = list(set(site))		# Discard duplicate sub-domains
-	# TODO(Aquilao@outlook.com): Fix the bug of sub-domains number.
-	# print("Find " + str(len(site)) + " sub-domains! ") 
+	subdomain_num = 0
 	for i in range(len(site)):
 		i += 1
 		subdomain = site[i - 1]
 		if len(subdomain) > 6:
 			ip = Getip(subdomain)
-			print('%-40s%-40s' % (subdomain, ip))
+			subdomain_num += 1
 		else:
 			pass
-		
+		print('%-5d%-40s%-40s' % (subdomain_num, subdomain, ip))
 if __name__ == '__main__':
 	main()
