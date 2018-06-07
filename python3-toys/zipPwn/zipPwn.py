@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
-# zip password crack tool
+
+# zipPwn -- zip password crack tool
 
 import os
 import zipfile
@@ -13,7 +14,7 @@ import zipfile
 -t multithreading
 '''
 
-# user interface
+# User interface
 def mainPage():
     print("     _       ____                 ")
     print(" ___(_)_ __ |  _ \__      ___ __  ")
@@ -28,7 +29,7 @@ def mainPage():
     file_path = input('Please input zip file path:')
     return file_path
 
-# read wordlist and transfer unzip()
+# Read wordlist and transfer unzip()
 def read_dict(zip_file, path):
     dict_path = input('Please input wordlist path:')
     pwd_file = open(dict_path)
@@ -40,7 +41,7 @@ def read_dict(zip_file, path):
     if flag == 0:
         print('Sorry, maybe you should use other wordlist.')
 
-# extract the zip file
+# Extract the zip file
 def unzip(zip_file, passwd, path):
     try:
         zip_file.extractall(path ,pwd = passwd.encode('utf-8'))
@@ -52,8 +53,8 @@ def unzip(zip_file, passwd, path):
 def main():
     file_path = mainPage()
     zip_file = zipfile.ZipFile(file_path)
-    path = os.path.split(file_path)
-    path = path[0]
+    path = os.path.split(file_path)[0]
+    print(path)
     read_dict(zip_file, path)
 
 if __name__ == "__main__":
