@@ -11,15 +11,18 @@ import socket
 
 # User interface
 def mainPage():
-    print(" ____  ____                       ")
-    print("/ ___||  _ \ ___  __ _  ___ _ __  ")
-    print("\___ \| | | / __|/ _` |/ __| '_ \\")
-    print(" ___) | |_| \__ \ (_| | (__| | | |")
-    print("|____/|____/|___/\__,_|\___|_| |_|")
-    print("---------------------------------------------")
-    print("* Version  1.0")
-    print("* GitHub   https://github.com/Aquilao/Toy-Box")
-    print("---------------------------------------------")
+    info = """
+     ____  ____
+    / ___||  _ \ ___  __ _  ___ _ __
+    \___ \| | | / __|/ _` |/ __| '_ \\
+     ___) | |_| \__ \ (_| | (__| | | |
+    |____/|____/|___/\__,_|\___|_| |_|
+    ---------------------------------------------
+    * Version  1.0
+    * GitHub   https://github.com/Aquilao/Toy-Box
+    ---------------------------------------------
+    """
+    print(info)
     domain = input('Please input domain:')
     print('Please wait...')
     return domain
