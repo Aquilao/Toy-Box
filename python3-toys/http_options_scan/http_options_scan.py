@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
-# http option scanner
+# http dangerous option scanner
 
 import threading
 import requests
+from optparse import OptionParser
 import sys
 import IPy
 import re
@@ -12,7 +13,23 @@ threads = []
 
 # 交互显示
 def mainPage():
-    url = input("Please input url [http(s)://domain/ip(/mask length)]:")
+    #print("""
+    #e.g:
+    #    python3 http_options_scan.py -u https://www.baidu.com
+    #    python3 http_options_scan.py -u http://192.168.1.100
+    #    python3 http_options_scan.py -u http://192.168.1.0/24
+    #""")
+    option = OptionParser()
+    option.add_option('-u', '--url', default=False, help='-u [http(s)://domain/ip(/mask length)]')
+    option.add_option('-v', '--view', default=False, action='store_true', help='show more message')
+    options, args = option.parse_args()
+    url = options.url
+    global view
+    view = options.view
+    if url == False and view == False:
+        option.print_help()
+        exit()
+    print("Please wait...")
     return url
 
 # 获取 HTTP Header
@@ -27,13 +44,14 @@ def getHTTPHead(url):
 # 检查 HTTP options 中是否有危险方法
 def dangerOptions(head):
     try:
+        server = head['Server']
         options = head['Allow']
         if (options.find("PUT") != -1 or options.find("MOVE") != -1):
-            return "HTTP Method Dangerous!"
+            return (server, "HTTP Method Dangerous!")
         else:
-            return "HTTP Method Safe."
+            return (server, "HTTP Method Safe.")
     except:
-        return "HTTP Method Safe."
+        return (server, "HTTP Method Safe.")
 
 # URL 处理
 def urlSplit(url):
@@ -52,14 +70,16 @@ def urlSplit(url):
 # 输出扫描结果
 def oneScan(url):
     lock.acquire()
-    url
     head = getHTTPHead(url)
     lock.release()
     if head == "HTTPError!":
-        print("{} {:<25} {}".format("[-]", url, "Dead Target/HTTP Error!"))
+        if view == True :
+            print("{:<30} {}".format("[-] " + url, "Dead Target/HTTP Error!"))
+        else:
+            pass
     else:
         status = dangerOptions(head)
-        print("\033[32m{} {:<25} {}\033[0m".format("[+]", url, status))
+        print("\033[32m{:<30} {:<40} {}\033[0m".format("[+] " + url, status[0], status[1]))
 
 
 def main():
@@ -71,6 +91,7 @@ def main():
         t.start()
     for t in threads:
         t.join()
+    print("Down.")
 
 
 if __name__ == "__main__":
