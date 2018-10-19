@@ -4,9 +4,9 @@
 import threading
 import requests
 from optparse import OptionParser
-import sys
 import IPy
 import re
+# threading、requests、optparse、IPy、re
 
 lock = threading.Lock()
 threads = []
@@ -36,8 +36,13 @@ def mainPage():
 def getHTTPHead(url):
     try:
         response = requests.options(url, timeout = 3)
-        response.raise_for_status()
-        return response.headers
+        # response.raise_for_status()
+        if response.status_code == 200:
+            return response.headers
+        elif response.status_code == 501:
+            response = requests.head(url, timeout = 3)
+            response.raise_for_status()
+            return response.headers
     except:
         return "HTTPError!"
 
