@@ -6,7 +6,6 @@ import requests
 from optparse import OptionParser
 import IPy
 import re
-# threading、requests、optparse、IPy、re
 
 lock = threading.Lock()
 threads = []
@@ -34,15 +33,17 @@ def mainPage():
 
 # 获取 HTTP Header
 def getHTTPHead(url):
+    requests.packages.urllib3.disable_warnings()                                # 忽略由于建立不安全的 https 连接导致 urllib3 库产生的警告
     try:
-        response = requests.options(url, timeout = 3)
-        # response.raise_for_status()
-        if response.status_code == 200:
-            return response.headers
-        elif response.status_code == 501:
-            response = requests.head(url, timeout = 3)
-            response.raise_for_status()
-            return response.headers
+        response = requests.get(url, timeout = 3, verify=False)
+        code = response.status_code
+        if code == 200:
+            try:
+                response = requests.options(url, timeout = 3)
+                response.raise_for_status()
+            except:
+                pass
+        return response.headers
     except:
         return "HTTPError!"
 
@@ -52,11 +53,11 @@ def dangerOptions(head):
         server = head['Server']
         options = head['Allow']
         if (options.find("PUT") != -1 or options.find("MOVE") != -1):
-            return (server, "HTTP Method Dangerous!")
+            return (server, 1)                                                  # 1 是 HTTP Method Dangerous!
         else:
-            return (server, "HTTP Method Safe.")
+            return (server, 0)                                                  # 0 是 HTTP Method Safe.
     except:
-        return (server, "HTTP Method Safe.")
+        return (server, 0)
 
 # URL 处理
 def urlSplit(url):
@@ -84,8 +85,10 @@ def oneScan(url):
             pass
     else:
         status = dangerOptions(head)
-        print("\033[32m{:<30} {:<40} {}\033[0m".format("[+] " + url, status[0], status[1]))
-
+        if status[1] == 0:
+            print("\033[32m{:<30} {:<40} {}\033[0m".format("[+] " + url, status[0], "HTTP Method Safe."))
+        else:
+            print("\033[31m{:<30} {:<40} {}\033[0m".format("[+] " + url, status[0], "HTTP Method Dangerous!"))
 
 def main():
     url = mainPage()
