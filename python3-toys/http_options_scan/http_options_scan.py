@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 # http dangerous option scanner
+# by Aquilao
 
 import threading
 import requests
@@ -22,9 +23,9 @@ def mainPage():
     option.add_option('-u', '--url', default=False, help='-u [http(s)://domain/ip(/mask length)]')
     option.add_option('-v', '--view', default=False, action='store_true', help='show more message')
     options, args = option.parse_args()
-    url = options.url
     global view
     view = options.view
+    url = options.url
     if url == False and view == False:
         option.print_help()
         exit()
@@ -50,6 +51,7 @@ def getHTTPHead(url):
 # 检查 HTTP options 中是否有危险方法
 def dangerOptions(head):
     try:
+        server = ' '
         server = head['Server']
         options = head['Allow']
         if (options.find("PUT") != -1 or options.find("MOVE") != -1):
@@ -78,11 +80,10 @@ def oneScan(url):
     lock.acquire()
     head = getHTTPHead(url)
     lock.release()
-    if head == "HTTPError!":
-        if view == True :
-            print("{:<30} {}".format("[-] " + url, "Dead Target/HTTP Error!"))
-        else:
-            pass
+    if head == "HTTPError!" and view == True:
+        print("{:<30} {}".format("[-] " + url, "Dead Target/HTTP Error!"))
+    elif head == "HTTPError!" and view == False:
+        pass
     else:
         status = dangerOptions(head)
         if status[1] == 0:

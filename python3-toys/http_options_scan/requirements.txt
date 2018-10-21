@@ -1,0 +1,4 @@
+certifi==2018.10.15
+IPy==0.83
+requests==2.20.0
+urllib3==1.24
