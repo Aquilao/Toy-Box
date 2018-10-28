@@ -4,34 +4,29 @@
 
 import os
 import zipfile
+from optparse import OptionParser
 
 # TODO(Aquilao@outlook.com): Add multithreading modules.
-# TODO(Aquilao@outlook.com): Set usage options.
 '''
--f zip file
--d wordlist
 -o output path
 -t multithreading
 '''
 
 # User interface
 def mainPage():
-    print("     _       ____                 ")
-    print(" ___(_)_ __ |  _ \__      ___ __  ")
-    print("|_  / | '_ \| |_) \ \ /\ / / '_ \ ")
-    print(" / /| | |_) |  __/ \ V  V /| | | |")
-    print("/___|_| .__/|_|     \_/\_/ |_| |_|")
-    print("      |_|                         ")
-    print("---------------------------------------------")
-    print("* Version  1.0")
-    print("* GitHub   https://github.com/Aquilao/Toy-Box")
-    print("---------------------------------------------")
-    file_path = input('Please input zip file path:')
-    return file_path
+    option = OptionParser()
+    option.add_option('-f', '--file', default=False, help='-f zip file path')
+    option.add_option('-d', '--wordlist', default=False, help='-d wordlist path')
+    options, args = option.parse_args()
+    file_path = options.file
+    dict_path = options.wordlist
+    if file_path == False and dict_path == False:
+        option.print_help()
+        exit()
+    return (file_path, dict_path)
 
 # Read wordlist and transfer unzip()
-def read_dict(zip_file, path):
-    dict_path = input('Please input wordlist path:')
+def read_dict(zip_file, dict_path, path):
     pwd_file = open(dict_path)
     for line in pwd_file.readlines():
         passwd = line.strip('\n')
@@ -51,11 +46,10 @@ def unzip(zip_file, passwd, path):
         return 0
 
 def main():
-    file_path = mainPage()
+    file_path, dict_path = mainPage()
     zip_file = zipfile.ZipFile(file_path)
     path = os.path.split(file_path)[0]
-    print(path)
-    read_dict(zip_file, path)
+    read_dict(zip_file, dict_path, path)
 
 if __name__ == "__main__":
     main()
