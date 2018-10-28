@@ -19,7 +19,6 @@ def mainPage():
     * GitHub   https://github.com/Aquilao/Toy-Box
     --------------------------------------------------
     """
-
     print(info)
     id = input('Please input RFC id:')
     print("Please waiting a moment...")
@@ -40,14 +39,14 @@ def getHTMLText(rfcid):
 def mksoup(html):
     soup = BeautifulSoup(html, 'html.parser')
     print(soup.title.string)
-    [s.extract() for s in soup('head')]    #Remove head tag and the text between them
+    [s.extract() for s in soup('head')]                                         # Remove head tag and the text between them
     return soup
 
 # Save RFC document
 def saveRFC(soup, rfcid):
-    path = os.path.expandvars('$HOME') + '/Downloads/'
+    path = os.path.expandvars('$HOME') + '/'
     file_path = path + 'rfc' + rfcid + '.txt'
-    text = soup.get_text()    # Remove all of the tags
+    text = soup.get_text()                                                      # Remove all of the tags
     f = open(file_path, 'w+')
     f.write(text)
     f.close()
