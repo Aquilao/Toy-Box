@@ -48,11 +48,11 @@ def Getip(subdomain):
 def main():
 	site = []
 	domain = mainPage()
-	for page in range(100):		# scan sub-mains in 100 pages
+	for page in range(100):		                                                # scan sub-mains in 100 pages
 		page = page * 10
 		subdomains = GetonePage(domain, page)
 		site += list(subdomains)
-		site = list(set(site))		# Discard duplicate sub-domains
+		site = list(set(site))		                                            # Discard duplicate sub-domains
 	subdomain_num = 0
 	print('Done.')
 	for i in range(len(site)):
@@ -64,5 +64,6 @@ def main():
 		else:
 			pass
 		print('%-5d%-40s%-40s' % (subdomain_num, subdomain, ip))
+
 if __name__ == '__main__':
 	main()
