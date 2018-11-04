@@ -14,7 +14,7 @@ threads = []
 # 交互显示
 def mainPage():
     #print("""
-    #e.g:
+    #e.g.
     #    python3 http_options_scan.py -u https://www.baidu.com
     #    python3 http_options_scan.py -u http://192.168.1.100
     #    python3 http_options_scan.py -u http://192.168.1.0/24
