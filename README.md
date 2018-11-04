@@ -5,12 +5,18 @@ A toy box to save my python3 code toys
 
 ## Toys List
 
-- [RFC search](https://github.com/Aquilao/Toy-Box/tree/master/python3-toys/RFCsearch)
-- [zipPwn](https://github.com/Aquilao/Toy-Box/tree/master/python3-toys/zipPwn)
-- [SDscan](https://github.com/Aquilao/Toy-Box/tree/master/python3-toys/SDscan)
-- [http_options_scan](https://github.com/Aquilao/Toy-Box/tree/master/python3-toys/http_options_scan)
-- [CVE-2018-9995_PoC](https://github.com/Aquilao/Toy-Box/tree/master/python3-toys/CVE-2018-9995_PoC)
-- [CVE-2018-4407_PoC](https://github.com/Aquilao/Toy-Box/tree/master/python3-toys/CVE-2018-4407_PoC)
+- [RFC search](https://github.com/Aquilao/Toy-Box/tree/master/RFCsearch)  
+		RFC documents downloads tool
+- [zipPwn](https://github.com/Aquilao/Toy-Box/tree/master/zipPwn)  
+		zip password crack tool
+- [SDscan](https://github.com/Aquilao/Toy-Box/tree/master/SDscan)  
+		sub-domain scan tool
+- [http_options_scan](https://github.com/Aquilao/Toy-Box/tree/master/http_options_scan)  
+		Dangerous HTTP options (PUT, MOVE) detection on the 80 or 443 port of the web server
+- [CVE-2018-9995_PoC](https://github.com/Aquilao/Toy-Box/tree/master/CVE-2018-9995_PoC)  
+		Get TBK DVR uid and pwd
+- [CVE-2018-4407_PoC](https://github.com/Aquilao/Toy-Box/tree/master/CVE-2018-4407_PoC)  
+		Crash iOS and OS X devices
 
 
 ## Install python3 requirements library

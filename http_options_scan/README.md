@@ -1,6 +1,6 @@
 ## http_options_scan
 
-对 Web 服务器的 80 或 443 端口进行危险的 HTTP options（PUT、MOVE)检测
+Dangerous HTTP options (PUT, MOVE) detection on the 80 or 443 port of the web server
 
 	Usage: http_options_scan.py [options]
 
