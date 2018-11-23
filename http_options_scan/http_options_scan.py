@@ -4,12 +4,15 @@
 
 import threading
 import requests
+import socket
+import struct
 from optparse import OptionParser
 import IPy
 import re
 
-lock = threading.Lock()
+# lock = threading.Lock()
 threads = []
+dic = {}
 
 # 交互显示
 def mainPage():
@@ -75,21 +78,23 @@ def urlSplit(url):
         urls.append(url)
     return urls
 
-# 输出扫描结果
+# 将扫描结果写入字典
 def oneScan(url):
-    lock.acquire()
+    #lock.acquire()
     head = getHTTPHead(url)
-    lock.release()
+    ips = IPy.IP(url.split("://")[1])
+    sip = struct.unpack('>I', socket.inet_aton(str(ips)))[0]                    # 将 ip 转化为 int
+    #lock.release()
     if head == "HTTPError!" and view == True:
-        print("{:<30} {}".format("[-] " + url, "Dead Target/HTTP Error!"))
+        dic[sip] = "{:<30} {}".format("[-] " + url, "Dead Target/HTTP Error!")
     elif head == "HTTPError!" and view == False:
         pass
     else:
         status = dangerOptions(head)
         if status[1] == 0:
-            print("\033[32m{:<30} {:<40} {}\033[0m".format("[+] " + url, status[0], "HTTP Method Safe."))
+            dic[sip] = "\033[32m{:<30} {:<40} {}\033[0m".format("[+] " + url, status[0], "HTTP Method Safe.")
         else:
-            print("\033[31m{:<30} {:<40} {}\033[0m".format("[+] " + url, status[0], "HTTP Method Dangerous!"))
+            dic[sip] = "\033[31m{:<30} {:<40} {}\033[0m".format("[+] " + url, status[0], "HTTP Method Dangerous!")
 
 def main():
     url = mainPage()
@@ -100,6 +105,8 @@ def main():
         t.start()
     for t in threads:
         t.join()
+    for k in sorted(dic.keys()):                                                # 按 key 排序打印出字典中的 value
+        print(dic[k])
     print("Down.")
 
 
