@@ -19,7 +19,7 @@ def mainPage():
     #print("""
     #e.g.
     #    python3 http_options_scan.py -u https://www.baidu.com
-    #    python3 http_options_scan.py -u http://192.168.1.100
+    #    python3 http_options_scan.py -u http://192.168.1.
     #    python3 http_options_scan.py -u http://192.168.1.0/24
     #""")
     option = OptionParser()
@@ -70,10 +70,13 @@ def urlSplit(url):
     is_ip = re.search(pat, url)
     urls = []
     if is_ip:
-        ips = IPy.IP(url.split("://")[1])
-        scheme = url.split("://")[0] + "://"
-        for ip in ips:
-            urls.append(scheme + str(ip))
+        try:
+            ips = IPy.IP(url.split("://")[1])
+            scheme = url.split("://")[0] + "://"
+            for ip in ips:
+                urls.append(scheme + str(ip))
+        except Exception as e:
+            print('URL Error!')
     else:
         urls.append(url)
     return urls
