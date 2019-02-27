@@ -7,8 +7,10 @@ import requests
 import socket
 import struct
 from optparse import OptionParser
+from concurrent.futures import ThreadPoolExecutor, wait, ALL_COMPLETED, FIRST_COMPLETED # test
 import IPy
 import re
+import cgitb                                                                    # test
 
 # lock = threading.Lock()
 threads = []
@@ -19,7 +21,7 @@ def mainPage():
     #print("""
     #e.g.
     #    python3 http_options_scan.py -u https://www.baidu.com
-    #    python3 http_options_scan.py -u http://192.168.1.
+    #    python3 http_options_scan.py -u http://192.168.1.1
     #    python3 http_options_scan.py -u http://192.168.1.0/24
     #""")
     option = OptionParser()
@@ -39,7 +41,7 @@ def mainPage():
 def getHTTPHead(url):
     requests.packages.urllib3.disable_warnings()                                # 忽略由于建立不安全的 https 连接导致 urllib3 库产生的警告
     try:
-        response = requests.get(url, timeout = 3, verify=False)
+        response = requests.head(url, timeout = 3, verify=False)
         code = response.status_code
         if code == 200:
             try:
@@ -95,13 +97,24 @@ def oneScan(url):
     else:
         status = dangerOptions(head)
         if status[1] == 0:
-            dic[sip] = "\033[32m{:<30} {:<40} {}\033[0m".format("[+] " + url, status[0], "HTTP Method Safe.")
+            # dic[sip] = "\033[32m{:<30} {:<40} {}\033[0m".format("[+] " + url, status[0], "HTTP Method Safe.")
+            print("\033[32m{:<30} {:<40} {}\033[0m".format("[+] " + url, status[0], "HTTP Method Safe."))
         else:
-            dic[sip] = "\033[31m{:<30} {:<40} {}\033[0m".format("[+] " + url, status[0], "HTTP Method Dangerous!")
+            # dic[sip] = "\033[31m{:<30} {:<40} {}\033[0m".format("[+] " + url, status[0], "HTTP Method Dangerous!")
+            print("\033[31m{:<30} {:<40} {}\033[0m".format("[+] " + url, status[0], "HTTP Method Dangerous!"))
 
 def main():
+    pool = ThreadPoolExecutor(max_workers=256)
     url = mainPage()
     urls = urlSplit(url)
+    '''
+    # wait 方法
+    all_task = [pool.submit(oneScan, (url)) for url in urls]
+    wait(all_task, return_when=ALL_COMPLETED)
+    '''
+    # map 方法
+    for data in pool.map(oneScan, urls):
+        pass
     for url in urls:
         t = threading.Thread(target = oneScan, args = (url,))                   # 多线程调用 oneScan() 扫描
         threads.append(t)
@@ -110,6 +123,9 @@ def main():
         t.join()
     for k in sorted(dic.keys()):                                                # 按 key 排序打印出字典中的 value
         print(dic[k])
+        '''
+    cgitb.enable(format='text')
+    '''
     print("Down.")
 
 
