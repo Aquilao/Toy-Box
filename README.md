@@ -33,6 +33,10 @@ A toy box to save my python3 code toys
 
 	> HTTP.sys Remote Code Execution detection
 
+- #### [WCM_CE_PoC](https://github.com/Aquilao/Toy-Box/blob/master/WCM_CE_PoC/WCM_CE_PoC.py)
+
+	> TRS WCM code execution detection (WooYun-2013-34315 PoC)
+
 
 ## Install python3 requirements library
 
