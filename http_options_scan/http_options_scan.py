@@ -30,7 +30,7 @@ def mainPage():
     |_| |_|\__|\__| .__/   \___/| .__/ \__|_|\___/|_| |_|___/ |___/\___\__,_|_| |_|
                   |_|           |_|                                                
      """
-    print(banner)
+    print("\033[36m" + banner + "\033[0m")
     option = OptionParser()
     option.add_option('-u', '--url', default=False, help='-u [http(s)://domain/ip(/mask length)]')
     option.add_option('-t', '--thread', default=256, help='-t <thread_number>, default 256')
@@ -38,6 +38,9 @@ def mainPage():
     option.add_option('-d', '--dangerous', default=False, action='store_true', help='only show dangerous message')
     options, args = option.parse_args()
     url = options.url
+    global s, d
+    d = 0
+    s = 0
     global view, dangerous, thread
     view = options.view
     dangerous = options.dangerous
@@ -99,18 +102,19 @@ def progress_bar(portion, total, info):
     sys.stdout.flush()
     if info:
         print(info)
-    sys.stdout.write(('[%-50s]%.2f%%' % (('>' * count), portion / total * 100))+'\r')
+    sys.stdout.write(('[~] [%-50s]%.2f%%' % (('>' * count), portion / total * 100))+'\r')
     sys.stdout.flush()
     if portion >= total:
         sys.stdout.write('\n')
         return True
 
-# 输出扫描结果
+# 记录扫描结果
 def oneScan(url):
     #lock.acquire()
     head = getHTTPHead(url)
     #lock.release()
     info = ''
+    global s, d
     if head == "HTTPError!" and view == True:
         info = "{:<30} {}".format("[-] " + url, "Dead Target/HTTP Error!")
     elif head == "HTTPError!" and view == False:
@@ -120,10 +124,12 @@ def oneScan(url):
         if status[1] == 0:
             if dangerous == False:
                 info = "\033[32m{:<30} {:<40} {}\033[0m".format("[+] " + url, status[0], "HTTP Method Safe.")
-            #print("\033[32m{:<30} {:<40} {}\033[0m".format("[+] " + url, status[0], "HTTP Method Safe."))
+                #print("\033[32m{:<30} {:<40} {}\033[0m".format("[+] " + url, status[0], "HTTP Method Safe."))
+                s += 1
         else:
             info = "\033[31m{:<30} {:<40} {}\033[0m".format("[+] " + url, status[0], "HTTP Method Dangerous!")
             #print("\033[31m{:<30} {:<40} {}\033[0m".format("[+] " + url, status[0], "HTTP Method Dangerous!"))
+            d += 1
     return info
 
 def main():
@@ -133,13 +139,14 @@ def main():
     executor = ThreadPoolExecutor(max_workers=thread)
     portion = 0
     total = len(urls)
-    print("\033[34m{} {} target {} {} threads\033[0m".format("[*]", str(total), "\n[*]", str(thread)))
+    print("\033[36m{} {} targets {} {} threads\033[0m".format("[*]", str(total), "\n[*]", str(thread)))
     for info in executor.map(oneScan, urls):
         portion += 1
         sum = progress_bar(portion, total, info)
         if sum:
             break
-    print("Done.")
+    print("\033[36m[*] Done.\033[0m")
+    print("\033[36m{} Scan {} targets, {} available {} Find {} dangerous targets, {} safe targets\033[0m".format("[*]", total, str(s + d), "\n[*]", d, s))
 
 
 if __name__ == "__main__":
