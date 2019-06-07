@@ -35,7 +35,11 @@ A toy box to save my python3 code toys
 
 - #### [WCM_CE_PoC](https://github.com/Aquilao/Toy-Box/blob/master/WCM_CE_PoC/WCM_CE_PoC.py)
 
-	> TRS WCM code execution detection (WooYun-2013-34315 PoC)
+	> TRS WCM code execution detection (WooYun-2013-34315) PoC
+
+- #### [CVE-2018-2894_PoC](https://github.com/Aquilao/Toy-Box/tree/master/CVE-2018-2894_PoC)
+
+	> WebLogic Unrestricted File Upload
 
 
 ## Install python3 requirements library
