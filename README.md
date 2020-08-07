@@ -46,7 +46,7 @@ A toy box to save my python3 code toys
 
 Find requirements.txt in every folder, then
 
-	pip3 install -r requirements.txt
+	pip3 install -r requirements.txt -i https://mirrors.aliyun.com/pypi/simple/
 
 If you haven't installed pip3 before, you can use
 

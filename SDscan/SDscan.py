@@ -59,10 +59,12 @@ def main():
 		i += 1
 		subdomain = site[i - 1]
 		if len(subdomain) > 7:
+			print(subdomain)
 			ip = Getip(subdomain)
+			print(ip)
 			subdomain_num += 1
 		else:
-			pass
+		    pass
 		print('%-5d%-40s%-40s' % (subdomain_num, subdomain, ip))
 
 if __name__ == '__main__':
