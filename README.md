@@ -4,6 +4,11 @@ A toy box to save my python3 code toys
 
 ## Toys List
 
+- #### [CT_subdomain_collection_tool](https://github.com/Aquilao/Toy-Box/tree/master/CT_subdomain_collection_tool)
+
+	> CT_subdomain_collection_tool
+	> 通过证书透明度（CT）收集子域名
+
 - #### [SANGFOR_EDR_RCE_PoC](https://github.com/Aquilao/Toy-Box/tree/master/SANGFOR_EDR_RCE_PoC)
 
 	> SANGFOR_EDR_RCE PoC

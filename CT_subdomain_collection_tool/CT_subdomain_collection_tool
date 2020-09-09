@@ -1,0 +1,74 @@
+#!/usr/bin/env python3
+# CT subdomain collection tool
+# 通过证书透明度（CT）收集子域名
+
+import json
+import requests
+from optparse import OptionParser
+from fake_useragent import UserAgent
+
+def parse_args():
+    banner = "CT_subdomain_collection_tool"
+    print("\033[36m" + banner + "\033[0m")
+    option = OptionParser()
+    option.add_option('-d', '--domain', default=False)
+    options, args = option.parse_args()
+    domain = options.domain
+    if domain == False:
+        option.print_help()
+        exit()
+    return domain
+
+def getHTML(url):
+    ua = UserAgent()
+    fakeua={"User-Agent" : ua.random}
+    requests.packages.urllib3.disable_warnings()                                # 忽略由于建立不安全的 https 连接导致 urllib3 库产生的警告
+    try:
+        response = requests.get(url, timeout = 50, headers = fakeua)
+        response.raise_for_status()
+        return response.text
+    except:
+        return 0
+
+# Find subdomains in crt.sh
+def crtsh(domain):
+    url = "https://crt.sh/?q={}&output=json".format(domain)
+    text = getHTML(url)
+    subdomains = set()
+    if text == 0:
+        print("Network Error!")
+        return list(subdomains)
+    else:
+        data = json.loads(text)
+        for subdomain in data:
+            subdomains.add(subdomain["name_value"].lower())
+        return sorted(subdomains)
+
+# Find subdomains in certspotter
+def certspotter(domain):
+    url = "https://certspotter.com/api/v0/certs?domain={}".format(domain)
+    text = getHTML(url)
+    subdomains = set()
+    if text == 0:
+        print("Network Error!")
+        return list(subdomains)
+    else:
+        data = json.loads(text)
+        for subdomain in data:
+            subdomains.add(''.join(subdomain["dns_names"]).lower())
+        return sorted(subdomains)
+
+def main():
+    domain = parse_args()
+    crtsh_subdomains = crtsh(domain)
+    certspotter_subdomains = certspotter(domain)
+    # print(type(crtsh_subdomains))
+    # print(type(certspotter_subdomains))
+    subdomains = list(set(crtsh_subdomains + certspotter_subdomains))
+    print("[+] Find {} subdomains.".format(len(subdomains)))
+    for subdomain in subdomains:
+        print(subdomain)
+
+   
+if __name__ == "__main__":
+    main()
