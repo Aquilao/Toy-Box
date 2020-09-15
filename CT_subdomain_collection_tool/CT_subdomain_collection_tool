@@ -8,8 +8,8 @@ from optparse import OptionParser
 from fake_useragent import UserAgent
 
 def parse_args():
-    banner = "CT_subdomain_collection_tool"
-    print("\033[36m" + banner + "\033[0m")
+    # banner = "CT_subdomain_collection_tool"
+    # print("\033[36m" + banner + "\033[0m")
     option = OptionParser()
     option.add_option('-d', '--domain', default=False)
     options, args = option.parse_args()
@@ -67,6 +67,13 @@ def main():
     # print(type(crtsh_subdomains))
     # print(type(certspotter_subdomains))
     all_subdomains = list(set(crtsh_subdomains + certspotter_subdomains))
+    # 去除误报
+    for subdomain in all_subdomains:
+        if subdomain.endswith(domain):
+            pass
+        else: 
+            all_subdomains.remove(subdomain)
+    # 区分 * 开头的域名
     subdomains = set()
     pending_subdomains = set()
     for subdomain in all_subdomains:
