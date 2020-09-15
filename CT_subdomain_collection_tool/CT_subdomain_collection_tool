@@ -26,36 +26,38 @@ def getHTML(url):
     try:
         response = requests.get(url, timeout = 50, headers = fakeua)
         response.raise_for_status()
-        return response.text
+        return response.content.decode('utf-8')
     except:
         return 0
 
 # Find subdomains in crt.sh
 def crtsh(domain):
     url = "https://crt.sh/?q={}&output=json".format(domain)
-    text = getHTML(url)
+    html = getHTML(url)
     subdomains = set()
-    if text == 0:
+    if html == 0:
         print("Network Error!")
         return list(subdomains)
     else:
-        data = json.loads(text)
+        data = json.loads(html)
         for subdomain in data:
-            subdomains.add(subdomain["name_value"].lower())
+            for subdomain in subdomain["name_value"].lower().split("\n"):
+                subdomains.add(subdomain)
         return sorted(subdomains)
 
 # Find subdomains in certspotter
 def certspotter(domain):
     url = "https://certspotter.com/api/v0/certs?domain={}".format(domain)
-    text = getHTML(url)
+    html = getHTML(url)
     subdomains = set()
-    if text == 0:
+    if html == 0:
         print("Network Error!")
         return list(subdomains)
     else:
-        data = json.loads(text)
+        data = json.loads(html)
         for subdomain in data:
-            subdomains.add(''.join(subdomain["dns_names"]).lower())
+            for subdomain in ''.join(["dns_names"]).lower().split("\n"):
+                subdomains.add(subdomain)
         return sorted(subdomains)
 
 def main():
@@ -64,10 +66,15 @@ def main():
     certspotter_subdomains = certspotter(domain)
     # print(type(crtsh_subdomains))
     # print(type(certspotter_subdomains))
-    subdomains = list(set(crtsh_subdomains + certspotter_subdomains))
-    print("[+] Find {} subdomains.".format(len(subdomains)))
-    for subdomain in subdomains:
-        print(subdomain)
+    all_subdomains = list(set(crtsh_subdomains + certspotter_subdomains))
+    subdomains = set()
+    pending_subdomains = set()
+    for subdomain in all_subdomains:
+        if subdomain[0] == '*':
+            pending_subdomains.add(subdomain)                           # *开头的子域名放入待处理域名集合
+        else:
+            subdomains.add(subdomain)                                   # 其他子域名直接放入子域名集合并输出
+            print(subdomain)      
 
    
 if __name__ == "__main__":
