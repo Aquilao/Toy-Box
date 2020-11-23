@@ -68,8 +68,9 @@ def main():
     # print(type(certspotter_subdomains))
     all_subdomains = list(set(crtsh_subdomains + certspotter_subdomains))
     # 去除误报
+    lol = '.' + domain
     for subdomain in all_subdomains:
-        if subdomain.endswith(domain):
+        if subdomain.endswith(lol):                           # 出问题了~
             pass
         else: 
             all_subdomains.remove(subdomain)
